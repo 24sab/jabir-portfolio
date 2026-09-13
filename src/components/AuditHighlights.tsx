@@ -17,6 +17,25 @@ export const AuditHighlights: React.FC = () => {
   const [stepIndex, setStepIndex] = useState(0);
   const [controlIndex, setControlIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [cardsPerView, setCardsPerView] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window === 'undefined') return;
+      if (window.innerWidth < 640) {
+        setCardsPerView(1);
+      } else if (window.innerWidth < 1024) {
+        setCardsPerView(2);
+      } else {
+        setCardsPerView(3);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const maxStepIndex = Math.max(0, auditMethodology.length - cardsPerView);
 
   const operationalControls = [
     {
@@ -75,11 +94,21 @@ export const AuditHighlights: React.FC = () => {
   }, [isPaused, operationalControls.length]);
 
   const prevStep = () => {
-    setStepIndex((prev) => (prev === 0 ? auditMethodology.length - 1 : prev - 1));
+    setStepIndex((prev) => (prev <= 0 ? maxStepIndex : prev - 1));
   };
 
   const nextStep = () => {
-    setStepIndex((prev) => (prev + 1) % auditMethodology.length);
+    setStepIndex((prev) => (prev >= maxStepIndex ? 0 : prev + 1));
+  };
+
+  const getStepTransform = () => {
+    if (cardsPerView === 1) {
+      return `translateX(calc(-${stepIndex} * (100% + 24px)))`;
+    }
+    if (cardsPerView === 2) {
+      return `translateX(calc(-${stepIndex} * (100% + 24px) / 2))`;
+    }
+    return `translateX(calc(-${stepIndex} * (100% + 24px) / 3))`;
   };
 
   const prevControl = () => {
@@ -250,21 +279,21 @@ export const AuditHighlights: React.FC = () => {
           </div>
 
           {/* Sliding Track for Step Cards */}
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden py-1">
             <div 
               className="flex gap-6 transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${stepIndex * (100 / auditMethodology.length)}%)` }}
+              style={{ transform: getStepTransform() }}
             >
               {auditMethodology.map((m, idx) => (
                 <div
                   key={idx}
-                  className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] flex-shrink-0 bg-white p-7 rounded-2xl border border-slate-200/80 shadow-subtle hover:border-slate-300 hover:shadow-elevated transition-all flex flex-col justify-between"
+                  className="w-full sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-48px)/3)] flex-shrink-0 bg-white p-7 sm:p-8 rounded-2xl border border-slate-200/80 shadow-subtle hover:border-slate-300 hover:shadow-elevated transition-all flex flex-col justify-between"
                 >
                   <div>
                     <span className="text-xs font-bold font-mono text-brand-800 tracking-wider">
                       STEP {m.step}
                     </span>
-                    <h4 className="text-base font-bold text-slate-950 mt-2 mb-2 leading-snug">
+                    <h4 className="text-lg font-bold text-slate-950 mt-2 mb-2 leading-snug">
                       {m.title}
                     </h4>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -282,14 +311,14 @@ export const AuditHighlights: React.FC = () => {
 
           {/* Step indicators */}
           <div className="flex items-center justify-center gap-1.5 mt-6">
-            {auditMethodology.map((_, i) => (
+            {Array.from({ length: maxStepIndex + 1 }).map((_, i) => (
               <button
                 key={i}
                 onClick={() => setStepIndex(i)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   stepIndex === i ? 'w-6 bg-slate-900' : 'w-1.5 bg-slate-300 hover:bg-slate-400'
                 }`}
-                aria-label={`Step ${i + 1}`}
+                aria-label={`Slide group ${i + 1}`}
               />
             ))}
           </div>
