@@ -7,8 +7,7 @@ import {
   CheckCircle2, 
   ChevronLeft, 
   ChevronRight,
-  ArrowRight,
-  Sparkles
+  ArrowRight
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 
@@ -117,10 +116,9 @@ export const AuditHighlights: React.FC = () => {
           {/* Top Carousel Navigation Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
             <div>
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-800">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Featured Inspection Carousel</span>
-              </div>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Inspection & Quality Protocols
+              </span>
               <h3 className="text-xl sm:text-2xl font-bold text-slate-950 mt-1">
                 {operationalControls[controlIndex].title}
               </h3>
