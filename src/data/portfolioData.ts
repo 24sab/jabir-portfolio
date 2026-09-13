@@ -1,3 +1,5 @@
+import jabirPhoto from '../assets/jabir-photo.png';
+
 export interface ExperienceItem {
   id: string;
   role: string;
@@ -60,8 +62,8 @@ export const portfolioData = {
     linkedinDisplay: "linkedin.com/in/jabirpk",
     nationality: "Indian",
     visaStatus: "Employment Visa",
-    resumePdfUrl: "/Jabir_PK_Resume.pdf",
-    heroImage: "/jabir-photo.png",
+    resumePdfUrl: `${import.meta.env.BASE_URL}Jabir_PK_Resume.pdf`,
+    heroImage: jabirPhoto,
     
     summary: "Dynamic and adaptable Quality, Hygiene, and HSE professional with over 8 years of experience across food manufacturing, trading, and institutional environments in the UAE. Skilled in HACCP, ISO 22000, and FSSC 22000 documentation and auditing, incident investigation and root cause analysis, and staff training on food safety and workplace safety standards. Proven record of achieving high audit scores, leading continuous improvement initiatives, and maintaining regulatory compliance.",
     
